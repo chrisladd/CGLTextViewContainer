@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = "CGLTextViewContainer"
   s.version          = "0.1.0"
-  s.summary          = "CGLTextViewContainer takes the best fix I've found for UITextView's layout problems, and wraps it in a lighter, simpler interface. It is, at its core, the same good stuff in JTSTextView."
+  s.summary          = "CGLTextViewContainer is the guts of JTSTextView, fixing UITextView by laying out on one, big screen."
   s.description      = <<-DESC
                            CGLTextViewContainer is a lighweight version of Jared Sinclair's excellent workaround to UITextView's notorious update problems. 
                         
