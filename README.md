@@ -8,7 +8,7 @@
 
 CGLTextViewContainer is a lighweight version of Jared Sinclair's excellent workaround to UITextView's notorious update problems. 
 
-It's pretty much just wholesale stolen, but it differs in a few ways: it trusts clients enough to grant them access to the internal text view, cutting the amount of code eeded by about half. Has-a vs. is-a or pretends-to-be-a. It allows configuration of the text container's height. And it takes into account measurements of the text view's nset.
+It's pretty much just wholesale stolen, but it differs in a few ways: it trusts clients enough to grant them access to the internal text view, cutting the amount of code needed by about half. Has-a vs. is-a or pretends-to-be-a. It allows configuration of the text container's height. And it takes into account measurements of the text view's text container inset.
 
 Original source here:
 https://github.com/jaredsinclair/JTSTextView
@@ -19,7 +19,7 @@ There is a basic example project, but, basically:
 
 - a CGLTextViewContainer is a UIScrollView, which has, as a subview, a really, really tall text view.
 
-- how long the text view is depends on your initialization. Mr. Sinclair chose 100,000 pts. That seems like a reasonable default. Use `- (instancetype)initWithFrame:(CGRect)frame height:(CGFloat)maxTextContainerHeight;` to set a custom value, or just `initWithFrame:` to get the default.
+- how long the text view is depends on your initialization. Mr. Sinclair chose 100,000 pts. That seems like a reasonable default. Use `initWithFrame: height:` to set a custom value, or just `initWithFrame:` to get the default.
 
 - if you want all these nice fixes, **you must not alter the delegate of the container object's text view**. We're treating you like adults here, people. Earn that trust. There's a passthrough delegate provided.
 
