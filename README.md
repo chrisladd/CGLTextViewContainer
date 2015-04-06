@@ -43,7 +43,7 @@ There is a basic example project, but, basically:
                                                                           20.0,
                                                                           40.0,
                                                                           20.0);
-    // and: don't you dare alter the delegate of the text view container's underlying text view. Either use the pass-through delegate or, as here, subscribe to notifications, being sure to set yourself as the delegate.
+    // and: don't you dare alter the delegate of the text view container's underlying text view. Either use the pass-through delegate or, as here, subscribe to notifications, being sure to the text container's text view as the object.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTextViewChanged:) name:UITextViewTextDidChangeNotification object:self.textViewContainer.textView];
 ```
 
