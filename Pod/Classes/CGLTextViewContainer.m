@@ -218,13 +218,13 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        [self textViewDidEndEditing:textView];
+        [self.textViewDelegate textViewDidEndEditing:textView];
     }
 }
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
     if ([self.textViewDelegate respondsToSelector:_cmd]) {
-        return [self textView:textView shouldInteractWithURL:URL inRange:characterRange];
+        return [self.textViewDelegate textView:textView shouldInteractWithURL:URL inRange:characterRange];
     }
     
     return NO;
