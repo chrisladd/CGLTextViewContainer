@@ -1,0 +1,14 @@
+PODS:
+  - CGLTextViewContainer (0.1.0)
+
+DEPENDENCIES:
+  - CGLTextViewContainer (from `../`)
+
+EXTERNAL SOURCES:
+  CGLTextViewContainer:
+    :path: ../
+
+SPEC CHECKSUMS:
+  CGLTextViewContainer: 896b019d0b2871268850ce942f0520e1cd05521b
+
+COCOAPODS: 0.35.0
