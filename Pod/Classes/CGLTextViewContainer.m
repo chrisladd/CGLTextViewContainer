@@ -123,6 +123,16 @@
     [self updateContentSize:YES delay:YES];
 }
 
+- (void)simpleScrollToCaret {
+    CGRect caretRect = [self.textView caretRectForPosition:self.textView.selectedTextRange.end];
+    [self scrollRectToVisible:CGRectInset(caretRect,
+                                          -1.0f,
+                                          -8.0f + -self.textView.textContainerInset.bottom)
+                     animated:YES];
+}
+
+#pragma mark - UITextViewDelegate
+
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     BOOL shouldChange = YES;
     if ([self.textViewDelegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
@@ -183,12 +193,50 @@
     }
 }
 
-- (void)simpleScrollToCaret {
-    CGRect caretRect = [self.textView caretRectForPosition:self.textView.selectedTextRange.end];
-    [self scrollRectToVisible:CGRectInset(caretRect,
-                                          -1.0f,
-                                          -8.0f + -self.textView.textContainerInset.bottom)
-                     animated:YES];
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+        return [self.textViewDelegate textViewShouldBeginEditing:textView];
+    }
+    
+    return YES;
 }
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
+    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+        return [self.textViewDelegate textViewShouldEndEditing:textView];
+    }
+    
+    return YES;
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+        [self.textViewDelegate textViewDidBeginEditing:textView];
+    }
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+        [self textViewDidEndEditing:textView];
+    }
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+        return [self textView:textView shouldInteractWithURL:URL inRange:characterRange];
+    }
+    
+    return NO;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange {
+    if ([self.textViewDelegate respondsToSelector:_cmd]) {
+        return [self.textViewDelegate textView:textView shouldInteractWithTextAttachment:textAttachment inRange:characterRange];
+    }
+    
+    return NO;
+}
+
 
 @end
