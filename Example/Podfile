@@ -1,0 +1,11 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'CGLTextViewContainer', :exclusive => true do
+  pod "CGLTextViewContainer", :path => "../"
+end
+
+target 'Tests', :exclusive => true do
+  pod "CGLTextViewContainer", :path => "../"
+
+  
+end
