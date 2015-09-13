@@ -1,9 +1,5 @@
 //
 //  CGLHackedTextViewContainer.m
-//  SFN
-//
-//  Created by Christopher Ladd on 9/13/15.
-//  Copyright © 2015 Christopher Ladd. All rights reserved.
 //
 
 #import "CGLHackedTextViewContainer.h"
@@ -20,14 +16,18 @@
 #define SLOW_DURATION 0.4f
 #define FAST_DURATION 0.2f
 
-
 @implementation CGLHackedTextViewContainer
+static CGFloat const CGLHackedTextViewContainerDefaultHeight = 100000;
 @synthesize textViewDelegate = _textViewDelegate;
 
 - (instancetype)initWithFrame:(CGRect)frame height:(CGFloat)maxTextContainerHeight {
     self = [super initWithFrame:frame];
     
     if (self) {
+        if (maxTextContainerHeight <= 0) {
+            maxTextContainerHeight = CGLHackedTextViewContainerDefaultHeight;
+        }
+        
         self.contentSize = frame.size;
         [self setBackgroundColor:[UIColor whiteColor]];
         [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
@@ -40,7 +40,6 @@
         NSTextContainer *container = [[NSTextContainer alloc] initWithSize:CGSizeMake(self.frame.size.width, maxTextContainerHeight)];
         container.widthTracksTextView = YES;
         [layoutManager addTextContainer:container];
-        
         self.textView = [[UITextView alloc] initWithFrame:CGRectMake(0.0,
                                                                      0.0,
                                                                      CGRectGetWidth(self.frame),
@@ -61,7 +60,7 @@
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    return [self initWithFrame:frame height:100000];
+    return [self initWithFrame:frame height:CGLHackedTextViewContainerDefaultHeight];
 }
 
 - (void)updateContentSize:(BOOL)scrollToVisible delay:(CGFloat)delay {
@@ -76,7 +75,7 @@
     
     if (scrollToVisible) {
         if (delay) {
-            __weak typeof (self) weakSelf = self;
+            __weak __typeof(self) weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf setUseLinearNextScrollAnimation:NO];
                 [weakSelf simpleScrollToCaret];
@@ -129,18 +128,13 @@
     
     [self updateContentSize:YES delay:YES];
 }
+
 - (void)simpleScrollToCaret {
     CGRect caretRect = [self.textView caretRectForPosition:self.textView.selectedTextRange.end];
-    [self scrollToCaretRect:caretRect];
-}
-
-- (void)scrollToCaretRect:(CGRect)caretRect {
-    CGRect visibleRect = CGRectMake(CGRectGetMinX(caretRect) - self.textView.contentInset.bottom,
-                                    CGRectGetMinY(caretRect),
-                                    CGRectGetWidth(caretRect),
-                                    CGRectGetHeight(caretRect) + (self.textView.contentInset.bottom * 2.0));
-    
-    [self scrollRectToVisible:visibleRect animated:YES];
+    [self scrollRectToVisible:CGRectInset(caretRect,
+                                          -1.0f,
+                                          -8.0f + -self.textView.textContainerInset.bottom)
+                     animated:YES];
 }
 
 #pragma mark - UITextViewDelegate
@@ -176,8 +170,9 @@
         if (selectedRange.length == 0 || selectedRange.location < self.previousSelectedRange.location) {
             // Scroll to start caret
             CGRect caretRect = [self.textView caretRectForPosition:self.textView.selectedTextRange.start];
+            CGRect targetRect = CGRectInset(caretRect, -1.0f, -8.0f);
             [self setUseLinearNextScrollAnimation:YES];
-            [self scrollToCaretRect:caretRect];
+            [self scrollRectToVisible:targetRect animated:YES];
         }
         else if (selectedRange.location > self.previousSelectedRange.location) {
             CGRect firstRect = [textView firstRectForRange:textView.selectedTextRange];
@@ -185,15 +180,17 @@
             if (firstRect.origin.y > bottomVisiblePointY - firstRect.size.height*1.1) {
                 // Scroll to start caret
                 CGRect caretRect = [self.textView caretRectForPosition:self.textView.selectedTextRange.start];
+                CGRect targetRect = CGRectInset(caretRect, -1.0f, -8.0f);
                 [self setUseLinearNextScrollAnimation:YES];
-                [self scrollToCaretRect:caretRect];
+                [self scrollRectToVisible:targetRect animated:YES];
             }
         }
         else if (selectedRange.location == self.previousSelectedRange.location) {
             // Scroll to end caret
             CGRect caretRect = [self.textView caretRectForPosition:self.textView.selectedTextRange.end];
+            CGRect targetRect = CGRectInset(caretRect, -1.0f, -8.0f);
             [self setUseLinearNextScrollAnimation:YES];
-            [self scrollToCaretRect:caretRect];
+            [self scrollRectToVisible:targetRect animated:YES];
         }
     }
     [self setPreviousSelectedRange:selectedRange];
@@ -246,5 +243,6 @@
     
     return NO;
 }
+
 
 @end
